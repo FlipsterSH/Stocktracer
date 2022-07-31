@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/style.css">
+        <script src="https://unpkg.com/vue@3"></script> 
+        <script src='https://cdn.plot.ly/plotly-2.12.1.min.js'></script>    
+    </head>
+
+    <body id="app">
+        <div id="top">
+            <h1>Stocktracer</h1>
+        </div>
+
+        <div id="mid">
+            <div id="left">
+                <button v-on:click="this.update_button()">Update</button>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/AAPL" target="_blank"><h4>AAPL</a> - {{ this.data.AAPL.price }} (<p :class="{ green: this.data.AAPL.change > 0, red: this.data.AAPL.change < 0, black: this.data.AAPL.change == 0}">{{ this.data.AAPL.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/GOOG" target="_blank"><h4>GOOG</a> - {{ this.data.GOOG.price }} (<p :class="{ green: this.data.GOOG.change > 0, red: this.data.GOOG.change < 0, black: this.data.GOOG.change == 0}">{{ this.data.GOOG.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/MSFT" target="_blank"><h4>MSFT</a> - {{ this.data.MSFT.price }} (<p :class="{ green: this.data.MSFT.change > 0, red: this.data.MSFT.change < 0, black: this.data.MSFT.change == 0}">{{ this.data.MSFT.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/^NDX" target="_blank"><h4>^NDX</a> - {{ this.data.NDX.price }} (<p :class="{ green: this.data.NDX.change > 0, red: this.data.NDX.change < 0, black: this.data.NDX.change == 0}">{{ this.data.NDX.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/SPY" target="_blank"><h4>SPY</a> - {{ this.data.SPY.price }} (<p :class="{ green: this.data.SPY.change > 0, red: this.data.SPY.change < 0, black: this.data.SPY.change == 0}">{{ this.data.SPY.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/TSLA" target="_blank"><h4>TSLA</a> - {{ this.data.TSLA.price }} (<p :class="{ green: this.data.TSLA.change > 0, red: this.data.TSLA.change < 0, black: this.data.TSLA.change == 0}">{{ this.data.TSLA.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><a href="https://finance.yahoo.com/quote/^VIX" target="_blank"><h4>^VIX</a> - {{ this.data.VIX.price }} (<p :class="{ green: this.data.VIX.change > 0, red: this.data.VIX.change < 0, black: this.data.VIX.change == 0}">{{ this.data.VIX.change }}%</p>)</h4></div>
+                <br>
+                <div class="text"><h4>Average gain: (<p :class="{ green: this.data.AVG > 0, red: this.data.AVG < 0, black: this.data.AVG == 0}">{{ this.data.AVG }}%</p>)</h4></div>
+                <br>
+
+                <br>
+                <div><h4>NEWS:</h4>
+                <br> 
+                <div v-for="message in this.data.MSG">{{ message }}</div>
+                </div>
+
+            </div>
+
+            <div id="right">
+                <select v-model="selected" @change="this.get_graph(this.selected)">
+                    <option disabled value="">SPY</option>
+                    <option>AAPL</option>
+                    <option>GOOG</option>
+                    <option>MSFT</option>
+                    <option>^NDX</option>
+                    <option>SPY</option>
+                    <option>TSLA</option>
+                    <option>^VIX</option>
+                </select>
+                
+                <div id="chart1"></div>
+            
+            </div>
+        </div>
+
+        <div id="bottom">
+            <h2>Under developement</h2>
+        </div>
+
+    <script src="/static/vue.js"></script>
+    </body>
+</html>
