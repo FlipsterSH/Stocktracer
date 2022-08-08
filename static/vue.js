@@ -20,6 +20,7 @@ const app = Vue.createApp({
     },
     methods: {
         async update_button() {
+            console.log("go")
             let reply = await fetch("/update");
             if (reply.status == 200) {
                 result = await reply.json();
