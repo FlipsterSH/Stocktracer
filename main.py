@@ -155,8 +155,8 @@ def market_status(): #takes inn a ticker_symbol and returns a list with all the 
 def similar_months(ticker_id, period): #how long the periods to compare are
     data = yf.download("SPY", period="30y")["Close"]
 
-    monthlist = [] #a list containing smaller lists, these smaller lists contain prices withing a month
-    month = []
+    monthlist = [] #when full, becomes a matrix where each row represents a period of closing price data
+    month = []# month represents the period
     for i in range(len(data) - 1, 0, -1): #appends a list of prices in a small list size of a month to the monthlist
         if len(month) == period:
             monthlist.append(month)
