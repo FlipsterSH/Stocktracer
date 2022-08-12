@@ -153,7 +153,7 @@ def market_status(): #takes inn a ticker_symbol and returns a list with all the 
 
 #21 dager er avg trading days
 def similar_months(ticker_id, period): #how long the periods to compare are
-    data = yf.download("SPY", period="30y")["Close"]
+    data = yf.download(ticker_id, period="30y")["Close"]
 
     monthlist = [] #when full, becomes a matrix where each row represents a period of closing price data
     month = []# month represents the period
@@ -204,6 +204,11 @@ def similar_months(ticker_id, period): #how long the periods to compare are
         messages.append(f"{get_date(period, numb)}")
 
     return messages
+
+
+#----------Compound functions above----------
+
+#----------Single functions below---------- 
 
 
 def get_date(period, amount): #(how long a period is, and how many periods)
@@ -310,7 +315,7 @@ def percent_numb(last, now): #last is the price yesterday, now is the price toda
     return round(prosent, 3) #returns the percentage difference number
 
 
-def percent_mult(last, now): #last is the price yesterday, now is the price today(most recent price)
+def percent_mult(last, now): #(percent_multiple) last is the price yesterday, now is the price today(most recent price)
     prosent = 0
     if last <= now:
         prosent = (now / last)
