@@ -40,6 +40,8 @@
             </div>
 
             <div id="right">
+                <div id="chart1"></div>
+
                 <select v-model="selected" @change="this.get_graph(this.selected)">
                     <option disabled value="">SPY</option>
                     <option>AAPL</option>
@@ -50,9 +52,6 @@
                     <option>TSLA</option>
                     <option>^VIX</option>
                 </select>
-                
-                <div id="chart1"></div>
-            
             </div>
         </div>
 
