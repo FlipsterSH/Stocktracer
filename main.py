@@ -79,7 +79,7 @@ def message_creator(dict): #takes in dict containig ticker as key and a list of 
         messages.append(msg)
 
     messages.append("---")
-    month_comparison = similar_months("SPY", 63)
+    month_comparison = similar_months("SPY", 63) #63 --> 3months
     for msg in month_comparison:
         messages.append(msg)
 
@@ -338,5 +338,5 @@ def average(liste): #tar inn en liste og returnerer gjennomsnittet av verdiene
 
 
 if __name__ == "__main__":
-    test = get_graph("SPY")
+    test = percent_numb(31415926.5, 31556926)
     print(test)
