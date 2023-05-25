@@ -1,4 +1,5 @@
 import yfinance as yf #py -m pip install yfinance
+from datetime import date
 
 
 def update1():
@@ -77,12 +78,16 @@ def message_creator(dict): #takes in dict containig ticker as key and a list of 
     for msg in status:
         messages.append(msg)
 
+    messages.append("---")
+    month_comparison = similar_months("SPY", 63) #63 --> 3months
+    for msg in month_comparison:
+        messages.append(msg)
+
     return messages #returns the list of messages
                 
 
 def get_graph(graph_id): #takes inn a ticker_symbol and returns a list with all the closing prices of this ticker last 2years
-    data = yf.download(graph_id, period="2y")
-    prices = data['Close']
+    prices = yf.download(graph_id, period="2y")["Close"]
 
     data = {"pricelist": [], "daylist": []}
     for price in prices:
@@ -98,7 +103,7 @@ def my_index(): #takes in nothing
     price_list = {"AAPL": [], "GOOG": [], "MSFT": [], "^NDX": [], "SPY": [], "TSLA": []} #dictionary holding the tickers, and lists with closing prices
 
     for tck in price_list: #this forloop fills up the ticker_dict with closing price data
-        data = yf.download(tck, period="5y")
+        data = yf.download(tck, period="5y")["Close"]
         price_list[tck] = data['Close']
 
     index_value = 1000
@@ -144,6 +149,94 @@ def market_status(): #takes inn a ticker_symbol and returns a list with all the 
         messages.append("Market not stable")
 
     return messages
+
+
+#21 dager er avg trading days
+def similar_months(ticker_id, period): #how long the periods to compare are
+    data = yf.download(ticker_id, period="30y")["Close"]
+
+    monthlist = [] #when full, becomes a matrix where each row represents a period of closing price data
+    month = []# month represents the period
+    for i in range(len(data) - 1, 0, -1): #appends a list of prices in a small list size of a month to the monthlist
+        if len(month) == period:
+            monthlist.append(month)
+            month = []
+
+        month.append(float(data[i]))
+
+
+    monthmovelist = [] #contains months in type list of monthmove
+    monthmove = [] #list with data for a month, contains "G" or "R" means it is green or red candle
+    for mnt in monthlist: #sets up monthmove list
+        for i in range(0, len(mnt) - 1, 1):
+            if mnt[i] > mnt[i + 1]:
+                monthmove.append("G")
+            else:
+                monthmove.append("R")
+
+        monthmovelist.append(monthmove)
+        monthmove = []
+
+
+    matchlist = []
+    thismonth = monthmovelist[0]
+    othermonths = monthmovelist[1:]
+    for mnt in othermonths:
+        match = 0 #keeps track of how many matches the months have with eachother, max score of 20
+        for j in range(0, len(thismonth), 1):
+            if thismonth[j] == mnt[j]:
+                match += 1
+        matchlist.append(match)
+
+
+    highestmatchindexes = []
+    highest = 0
+    for i in range(0, len(matchlist), 1):
+        if matchlist[i] == highest:
+            highestmatchindexes.append(i)
+
+        if matchlist[i] > highest:
+            highest = matchlist[i]
+            highestmatchindexes = [i]
+
+    messages = [f"These dates have a {percent_match(period, highest)}% match with today:"]
+    for numb in highestmatchindexes:
+        messages.append(f"{get_date(period, numb)}")
+
+    return messages
+
+
+#----------Compound functions above----------
+
+#----------Single functions below---------- 
+
+
+def get_date(period, amount): #(how long a period is, and how many periods)
+    months = period / 21
+    amount_months = months * amount
+    years = amount_months // 12
+    amount_months -= years * 12
+
+    today = date.today() #YYYY-MM-DD
+    this_day = int(today.strftime("%d"))
+    this_month = int(today.strftime("%m"))
+    this_year = int(today.strftime("%Y"))
+
+    if this_month > amount_months:
+        this_month -= amount_months #kan bli null, må finne ut hva det skal bety
+    else:
+        amount_months -= this_month
+        years += 1
+        this_month = 11 - amount_months
+        amount_months = this_month
+
+    this_year -= int(years)
+
+    return(f"{int(this_day)}.{int(this_month)}.{int(this_year)}") #returns a string of the end date
+
+
+def percent_match(max, score):
+    return round((score / max) * 100, 1)
 
 
 def compare_month(liste): #return 1 is positive, return 0 is negative
@@ -222,7 +315,7 @@ def percent_numb(last, now): #last is the price yesterday, now is the price toda
     return round(prosent, 3) #returns the percentage difference number
 
 
-def percent_mult(last, now): #last is the price yesterday, now is the price today(most recent price)
+def percent_mult(last, now): #(percent_multiple) last is the price yesterday, now is the price today(most recent price)
     prosent = 0
     if last <= now:
         prosent = (now / last)
@@ -245,5 +338,5 @@ def average(liste): #tar inn en liste og returnerer gjennomsnittet av verdiene
 
 
 if __name__ == "__main__":
-    test = update1()
+    test = percent_numb(31415926.5, 31556926)
     print(test)
